@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "147324835358",
+    "project_id": "vlisten-c5964",
+    "storage_bucket": "vlisten-c5964.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147324835358:android:4a98ef01d23202bff2c00f",
+        "android_client_info": {
+          "package_name": "com.example.vlisten"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "147324835358-qlmoru8u6mps0jsjppa11u5q3sg9id0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpJsQUppINCfKWGonjt6B5JFO3HQhiXGo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "147324835358-qlmoru8u6mps0jsjppa11u5q3sg9id0m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
