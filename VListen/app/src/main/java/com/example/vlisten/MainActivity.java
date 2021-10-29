@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     concerns.add("LGBTQ+");
                     recommendedGroups.add(2);
                 }
-                //Specially Abled
+                //Specially Able
                 if(s.get(12).isChecked())
                 {
                     concerns.add("Specially Abled");
