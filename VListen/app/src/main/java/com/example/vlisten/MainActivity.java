@@ -2,6 +2,7 @@ package com.example.vlisten;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,21 +10,21 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    RelativeLayout rel;
-    //Switch[]={switch1, switch2, switch3, switch4, switch5, switch6, switch7, switch8,switch9, switch10, switch11, switch12, switch13, switch14}
-    ArrayList<Switch> s = new ArrayList<>();
-    ArrayList<String> concerns = new ArrayList<>();
-    ArrayList<Integer> recommendedGroups = new ArrayList<>();
+    public RelativeLayout rel;
+    public ArrayList<Switch> s = new ArrayList<>();
+    public ArrayList<String> concerns = new ArrayList<>();
+    public ArrayList<Integer> recommendedGroups = new ArrayList<>();
     Button one;
     int count=0;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //take values from checkboxes
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         s.add((Switch) this.findViewById(R.id.switch13));
         s.add((Switch) this.findViewById(R.id.switch14));
 
-        one=(Button)findViewById(R.id.button6);
+        one=(Button)findViewById(R.id.button1);
         one.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
@@ -101,11 +102,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-
-
-//                FirebaseDatabase database = FirebaseDatabase.getInstance();
-//                DatabaseReference myRef = database.getReference("Concerns ");
-//                myRef.setValue(concerns);
                 // Database reference pointing to root of database
                 DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                 // Database reference pointing to demo node
@@ -116,7 +112,14 @@ public class MainActivity extends AppCompatActivity {
 
                 // Database reference pointing to demo node
                 usersRef.child("2").child("recommendedGroups").setValue(recommendedGroups);
+                gotoGroupRecommendation();
+
 
             }});
+
+        }
+    private void gotoGroupRecommendation(){
+        Intent intent = new Intent(MainActivity.this, GroupRecommendation.class);
+        startActivity(intent);
     }
 }
