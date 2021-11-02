@@ -157,6 +157,7 @@
                     android:layout_marginRight="10px"
                     android:text="Need alcohol or drugs to function" />
 
+
                 <Button
                     android:id="@+id/button1"
                     android:layout_width="match_parent"
