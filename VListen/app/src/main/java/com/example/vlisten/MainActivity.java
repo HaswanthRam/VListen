@@ -101,12 +101,10 @@ public class MainActivity extends AppCompatActivity {
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             // Database reference pointing to demo node
             DatabaseReference usersRef = rootRef.child("Users");
-            usersRef.child("2").child("concerns").setValue(concerns);
-
-
+            usersRef.child("1").child("concerns").setValue(concerns);
 
             // Database reference pointing to demo node
-            usersRef.child("2").child("recommendedGroups").setValue(recommendedGroups);
+            usersRef.child("1").child("recommendedGroups").setValue(recommendedGroups);
 
               gotoGroupRecommendation();
         });

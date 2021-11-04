@@ -29,7 +29,7 @@ public class GroupRecommendation extends Activity {
             // Database reference pointing to User node
             DatabaseReference usersRef = rootRef.child("Users");
             // Database reference for recommended groups
-            DatabaseReference groupId = usersRef.child("2").child("recommendedGroups");
+            DatabaseReference groupId = usersRef.child("1").child("recommendedGroups");
 
 
             //method to fetch the recommended Group IDs from Users node
@@ -55,7 +55,7 @@ public class GroupRecommendation extends Activity {
                                 //if recommendedGroupIds match with the group IDs in Groups node, Name and descriptions are being saved.
                                 if(recommendedGroupIds.get(i).toString().equalsIgnoreCase(child.child("groupId").getValue().toString()))
                                 {
-                                   recommendedGroupDescriptions.add(child.child("tag").getValue().toString());
+                                   recommendedGroupDescriptions.add(child.child("description").getValue().toString());
                                     recommendedGroupNames.add(child.child("groupName").getValue().toString());
                                     flag++; //variable to keep the length of recommendedGroupIDs in check
 
