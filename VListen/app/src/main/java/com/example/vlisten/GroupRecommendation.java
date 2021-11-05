@@ -1,6 +1,9 @@
 package com.example.vlisten;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,12 +15,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
-public class GroupRecommendation extends Activity {
+public class GroupRecommendation extends Activity{
         LinearLayout my_linear_layout;
         int N;
         ArrayList<String> recommendedGroupIds = new ArrayList<>();
         ArrayList<String> recommendedGroupDescriptions = new ArrayList<>();
     ArrayList<String> recommendedGroupNames = new ArrayList<>();
+
+
+    // Database reference pointing to root of database
+    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    // Database reference pointing to User node
+    DatabaseReference usersRef = rootRef.child("Users");
+    DatabaseReference groups = usersRef.child("1").child("groups");
+
+    DatabaseReference groupCollection = rootRef.child("Groups");
+
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +43,6 @@ public class GroupRecommendation extends Activity {
             DatabaseReference usersRef = rootRef.child("Users");
             // Database reference for recommended groups
             DatabaseReference groupId = usersRef.child("1").child("recommendedGroups");
-
 
             //method to fetch the recommended Group IDs from Users node
             groupId.addValueEventListener(new ValueEventListener() {
@@ -45,7 +57,7 @@ public class GroupRecommendation extends Activity {
 
                     //Groups IDs fetched. Fetching Group Names and Description with Group IDs
                     DatabaseReference tagName=snapshot.getRef().getRoot().child("Groups");
-                    tagName.addValueEventListener(new ValueEventListener() {
+                    tagName.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             int i, flag=0;
@@ -92,6 +104,7 @@ public class GroupRecommendation extends Activity {
         {
             my_linear_layout = findViewById(R.id.my_linear_layout);
 
+
             for (int i = 0; i < N; i++) {
                 // create a new textview
                 final TextView rowTextView = new TextView(this);
@@ -107,9 +120,30 @@ public class GroupRecommendation extends Activity {
                 final Button JoinButton = new Button(this);
                 JoinButton.setText("Join");
                 JoinButton.setId(i);
+                String s = recommendedGroupIds.get(i);
+                JoinButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(JoinButton.getText()=="Join")
+                        {
+                            //groups.push().setValue(s);
+                            groups.push().setValue(s);
+                            groupCollection.child(s).child("groupMembers").push().setValue("User1");
+                            JoinButton.setText("Joined");
+                        }
+                       else
+                        {
+                            JoinButton.setText("Already Joined");
+                        }
+                    }
+                });
                 my_linear_layout.addView(JoinButton);
             }
-
+            final Button nextButton = new Button(this);
+            nextButton.setText("Next");
+            my_linear_layout.addView(nextButton);
         }
+
+
 
     }
