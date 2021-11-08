@@ -38,7 +38,7 @@ public class GroupRecommendation extends Activity{
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.group_recommendation);
+            setContentView(R.layout.iterative_linearlayout);
 
             // Database reference pointing to root of database
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -106,7 +106,12 @@ public class GroupRecommendation extends Activity{
         public void createXML()
         {
             my_linear_layout = findViewById(R.id.my_linear_layout);
-
+            //create a new textview title
+            final TextView rowTextViewTitle = new TextView(this);
+            rowTextViewTitle.setText("Recommended Groups");
+            rowTextViewTitle.setGravity(1);
+            rowTextViewTitle.setTextSize(28);
+            my_linear_layout.addView(rowTextViewTitle);
 
             for (int i = 0; i < N; i++) {
                 // create a new textview
