@@ -31,25 +31,26 @@ public class groupFeed extends Activity {
     ArrayList<String> Postslist = new ArrayList<String>();
     ArrayList<String> text = new ArrayList<String>();
     ArrayList<String> user = new ArrayList<String>();
-    ArrayList<POJO.Posts> Posts = new ArrayList<>();
-    POJO.Posts p = new Posts();
+    ArrayList<Posts> Posts = new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.iterative_linearlayout);
-        PostsRef.addValueEventListener(new ValueEventListener() {
+        PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 N = (int) snapshot.getChildrenCount();
 
                 //iterating over the recommended group IDs through the Users node.
                 for (DataSnapshot child : snapshot.getChildren()) {
-                    //Postslist.add(child.getValue().toString());
 
-                    text.add(child.child("text").getValue().toString());
-                    user.add(child.child("user").getValue().toString());
-
-
+                    Posts p = new Posts();
+                    p.setText(child.child("text").getValue().toString());
+                    p.setUser(child.child("user").getValue().toString());
+                    p.setPostId(child.child("postId").getValue().toString());
+                    p.setLikes(Integer.valueOf(child.child("likes").getValue().toString()));
+                    Posts.add(p);
 
                 }
 
@@ -77,18 +78,36 @@ public class groupFeed extends Activity {
         for (int i = 0; i < N; i++) {
             // create a new textview
             final TextView rowTextView = new TextView(this);
-            rowTextView.setText("User "+user.get(i).toString()+"\n");
+            rowTextView.setText(Posts.get(i).getText());
             rowTextView.setId(i);
             my_linear_layout.addView(rowTextView);
             //creating another text view
             final TextView rowTextView2 = new TextView(this);
-            rowTextView2.setText(text.get(i).toString()+"\n");
+            rowTextView2.setText(Posts.get(i).getUser());
             rowTextView2.setId(i);
             my_linear_layout.addView(rowTextView2);
             //creating a like button
             final Button likeButton = new Button(this);
-            likeButton.setText("Like");
+            likeButton.setText(Posts.get(i).getLikes() + " Likes");
             likeButton.setId(i);
+            String id = Posts.get(i).getPostId();
+            int likes = Posts.get(i).getLikes()+1;
+            likeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(likeButton.isEnabled())
+                    {
+                        likeButton.setEnabled(false);
+
+                        PostsRef.child(id).child("likes").setValue(likes);
+                        likeButton.setText(String.valueOf(likes) + " Likes");
+
+
+                    }
+
+                }
+            });
+
             my_linear_layout.addView(likeButton);
             //creating a share button
             final Button shareButton = new Button(this);
@@ -96,6 +115,6 @@ public class groupFeed extends Activity {
             shareButton.setId(i);
             my_linear_layout.addView(shareButton);
 
-    }
+        }
 
-}}
+    }}

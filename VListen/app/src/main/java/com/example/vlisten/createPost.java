@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import POJO.Posts;
 
@@ -37,8 +39,12 @@ public class createPost extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dummy_create_post);
+        Random r = new Random();
 
-
+        String generatedString = r.ints(97, 122 + 1)
+                .limit(15)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
         TextView postText = findViewById(R.id.postText);
         Button send = findViewById(R.id.sendButton);
 
@@ -50,36 +56,56 @@ public class createPost extends Activity {
                     Posts newPost = new Posts();
                     newPost.setText(postText.getText().toString());
                     newPost.setUser("1");
-                    PostsRef.push().setValue(newPost);
+                    newPost.setLikes(0);
+                    newPost.setUserName("User One");
+                    newPost.setPostId(generatedString);
+                    PostsRef.child(generatedString).setValue(newPost);
+//                    PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                          //  int entry = Integer.valueOf(snapshot.child("entries").getValue().toString());
+//                            newPost.setPostId(String.valueOf(entry+1));
+//                            PostsRef.child(String.valueOf(entry+1)).setValue(newPost);
+//                            PostsRef.child("entries").setValue(String.valueOf(entry+1));
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+                   // PostsRef.child("100").setValue(newPost);
                 }
                 catch(Exception e)
                 {
                     e.printStackTrace();
                 }
 
-                PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                        for (DataSnapshot child : snapshot.getChildren()) {
+//
+//
+//                           String text =  child.child("text").getValue().toString();
+//                           String user =  child.child("user").getValue().toString();
+//                           Posts p = new Posts();
+//                           p.setText(text);
+//                           p.setUser(user);
+//                           p.setLikes(0);
+//                           Posts.add(p);
+//
+//                        }
+//
+//                    }
 
-                        for (DataSnapshot child : snapshot.getChildren()) {
-
-                           String text =  child.child("text").getValue().toString();
-                           String user =  child.child("user").getValue().toString();
-                           Posts p = new Posts();
-                           p.setText(text);
-                           p.setUser(user);
-                           Posts.add(p);
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-
-                });
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//
+//                });
 
 
             }
