@@ -1,6 +1,7 @@
 package com.example.vlisten;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -112,5 +113,18 @@ public class groupFeed extends Activity {
             my_linear_layout.addView(shareButton);
 
         }
+
+        final Button createPost = new Button(this);
+        createPost.setText("Create Post");
+//        createPost.setId();
+
+        createPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(groupFeed.this, createPost.class);
+                startActivity(intent);
+            }
+        });
+        my_linear_layout.addView(createPost);
 
     }}
