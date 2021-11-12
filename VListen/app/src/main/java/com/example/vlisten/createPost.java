@@ -27,13 +27,16 @@ import java.util.Map;
 import java.util.Random;
 
 import POJO.Posts;
+import POJO.cheerPosts;
 
 public class createPost extends Activity {
 
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // Database reference pointing to User node
     DatabaseReference PostsRef = rootRef.child("Posts");
+    DatabaseReference CheersRef = rootRef.child("Cheers");
     ArrayList<Posts> Posts = new ArrayList<>();
+    ArrayList<cheerPosts> cheerPosts = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
@@ -47,7 +50,20 @@ public class createPost extends Activity {
                 .toString();
         TextView postText = findViewById(R.id.postText);
         Button send = findViewById(R.id.sendButton);
+        Button createCheerPost = findViewById(R.id.postCheerButton);
 
+        createCheerPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cheerPosts cheer = new cheerPosts();
+                cheer.setText(postText.getText().toString());
+                cheer.setCheers(0);
+                cheer.setCheerPostId(generatedString);
+                cheer.setUserName("User 1");
+                cheer.setUserId("1");
+                CheersRef.child(generatedString).setValue(cheer);
+            }
+        });
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,53 +76,12 @@ public class createPost extends Activity {
                     newPost.setUserName("User One");
                     newPost.setPostId(generatedString);
                     PostsRef.child(generatedString).setValue(newPost);
-//                    PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                          //  int entry = Integer.valueOf(snapshot.child("entries").getValue().toString());
-//                            newPost.setPostId(String.valueOf(entry+1));
-//                            PostsRef.child(String.valueOf(entry+1)).setValue(newPost);
-//                            PostsRef.child("entries").setValue(String.valueOf(entry+1));
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-                   // PostsRef.child("100").setValue(newPost);
+
                 }
                 catch(Exception e)
                 {
                     e.printStackTrace();
                 }
-
-//                PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                        for (DataSnapshot child : snapshot.getChildren()) {
-//
-//
-//                           String text =  child.child("text").getValue().toString();
-//                           String user =  child.child("user").getValue().toString();
-//                           Posts p = new Posts();
-//                           p.setText(text);
-//                           p.setUser(user);
-//                           p.setLikes(0);
-//                           Posts.add(p);
-//
-//                        }
-//
-//                    }
-
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//
-//                });
-
 
             }
         });

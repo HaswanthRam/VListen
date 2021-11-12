@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,20 +19,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import POJO.Posts;
+import POJO.cheerPosts;
 
-public class groupFeed extends Activity {
+public class cheerBoard extends Activity {
     LinearLayout my_linear_layout;
     int N;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // Database reference pointing to User node
-    DatabaseReference PostsRef = rootRef.child("Posts");
-    ArrayList<Posts> Posts = new ArrayList<>();
-
+    DatabaseReference CheerRef = rootRef.child("Cheers");
+    ArrayList<cheerPosts> cheers = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.iterative_linearlayout);
-        PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        CheerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 N = (int) snapshot.getChildrenCount();
@@ -41,12 +41,12 @@ public class groupFeed extends Activity {
                 //iterating over the recommended group IDs through the Users node.
                 for (DataSnapshot child : snapshot.getChildren()) {
 
-                    Posts p = new Posts();
-                    p.setText(child.child("text").getValue().toString());
-                    p.setUser(child.child("user").getValue().toString());
-                    p.setPostId(child.child("postId").getValue().toString());
-                    p.setLikes(Integer.valueOf(child.child("likes").getValue().toString()));
-                    Posts.add(p);
+                    cheerPosts cheer = new cheerPosts();
+                    cheer.setText(child.child("text").getValue().toString());
+                    cheer.setUserName(child.child("userName").getValue().toString());
+                    cheer.setCheerPostId(child.child("cheerPostId").getValue().toString());
+                    cheer.setCheers(Integer.valueOf(child.child("cheers").getValue().toString()));
+                    cheers.add(cheer);
 
                 }
 
@@ -67,36 +67,36 @@ public class groupFeed extends Activity {
         my_linear_layout = findViewById(R.id.my_linear_layout);
         //create a new textview title
         final TextView rowTextViewTitle = new TextView(this);
-        rowTextViewTitle.setText("Group Feed");
+        rowTextViewTitle.setText("Cheer Board");
         rowTextViewTitle.setGravity(1);
         rowTextViewTitle.setTextSize(28);
         my_linear_layout.addView(rowTextViewTitle);
         for (int i = 0; i < N; i++) {
             // create a new textview
             final TextView rowTextView = new TextView(this);
-            rowTextView.setText(Posts.get(i).getText());
+            rowTextView.setText(cheers.get(i).getText());
             rowTextView.setId(i);
             my_linear_layout.addView(rowTextView);
             //creating another text view
             final TextView rowTextView2 = new TextView(this);
-            rowTextView2.setText(Posts.get(i).getUser());
+            rowTextView2.setText(cheers.get(i).getUserName());
             rowTextView2.setId(i);
             my_linear_layout.addView(rowTextView2);
             //creating a like button
-            final Button likeButton = new Button(this);
-            likeButton.setText(Posts.get(i).getLikes() + " Likes");
-            likeButton.setId(i);
-            String id = Posts.get(i).getPostId();
-            int likes = Posts.get(i).getLikes()+1;
-            likeButton.setOnClickListener(new View.OnClickListener() {
+            final Button cheerButton = new Button(this);
+            cheerButton.setText(cheers.get(i).getCheers() + " Cheers");
+            cheerButton.setId(i);
+            String id = cheers.get(i).getCheerPostId();
+            int cheersCount = cheers.get(i).getCheers()+1;
+            cheerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(likeButton.isEnabled())
+                    if(cheerButton.isEnabled())
                     {
-                        likeButton.setEnabled(false);
+                        cheerButton.setEnabled(false);
 
-                        PostsRef.child(id).child("likes").setValue(likes);
-                        likeButton.setText(String.valueOf(likes) + " Likes");
+                        CheerRef.child(id).child("cheers").setValue(cheersCount);
+                        cheerButton.setText(String.valueOf(cheersCount) + " Cheers");
 
 
                     }
@@ -104,7 +104,7 @@ public class groupFeed extends Activity {
                 }
             });
 
-            my_linear_layout.addView(likeButton);
+            my_linear_layout.addView(cheerButton);
             //creating a share button
             final Button shareButton = new Button(this);
             shareButton.setText("Share");
@@ -113,4 +113,5 @@ public class groupFeed extends Activity {
 
         }
 
-    }}
+    }
+}

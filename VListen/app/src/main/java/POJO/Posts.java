@@ -35,8 +35,7 @@ public class Posts {
         this.groupId = groupId;
     }
 
-    int likes;
-    int groupId;
+
 
     public String getPostId() {
         return postId;
@@ -46,8 +45,7 @@ public class Posts {
         this.postId = postId;
     }
 
-    String postId;
-    String text;
+
 
 
     public ArrayList<String> getUserIds() {
@@ -58,7 +56,6 @@ public class Posts {
         this.userIds = userIds;
     }
 
-    String user;
 
     public String getUserName() {
         return userName;
@@ -71,5 +68,11 @@ public class Posts {
     String userName;
 
     ArrayList<String> userIds = new ArrayList<>();
+    int likes;
+    int groupId;
+    String postId;
+    String text;
+    String user;
+
 
 }
