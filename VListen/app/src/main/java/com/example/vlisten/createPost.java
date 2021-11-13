@@ -1,6 +1,7 @@
 package com.example.vlisten;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -50,20 +51,9 @@ public class createPost extends Activity {
                 .toString();
         TextView postText = findViewById(R.id.postText);
         Button send = findViewById(R.id.sendButton);
-        Button createCheerPost = findViewById(R.id.postCheerButton);
+        //Button createCheerPost = findViewById(R.id.postCheerButton);
 
-        createCheerPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cheerPosts cheer = new cheerPosts();
-                cheer.setText(postText.getText().toString());
-                cheer.setCheers(0);
-                cheer.setCheerPostId(generatedString);
-                cheer.setUserName("User 1");
-                cheer.setUserId("1");
-                CheersRef.child(generatedString).setValue(cheer);
-            }
-        });
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +66,7 @@ public class createPost extends Activity {
                     newPost.setUserName("User One");
                     newPost.setPostId(generatedString);
                     PostsRef.child(generatedString).setValue(newPost);
-
+                    gotoGroupFeed();
                 }
                 catch(Exception e)
                 {
@@ -84,6 +74,12 @@ public class createPost extends Activity {
                 }
 
             }
+
         });
+
+    }
+    private void gotoGroupFeed(){
+        Intent intent = new Intent(createPost.this, groupFeed.class);
+        startActivity(intent);
     }
 }

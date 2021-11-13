@@ -25,13 +25,13 @@
 
 
         <Button
-            android:id="@+id/sendButton"
+            android:id="@+id/postCheerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="64dp"
             android:layout_marginBottom="58dp"
-            android:text="Create Post" />
+            android:text="Post Cheer" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
