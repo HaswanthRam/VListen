@@ -81,6 +81,11 @@ public class MainActivity extends AppCompatActivity {
                 concerns.add("anxiety");
                 recommendedGroups.add(5);
             }
+            else if(count > 0 && count < 3)
+            {
+                concerns.add("partial anxiety");
+                recommendedGroups.add(7);
+            }
             count = 0 ;
             //Depression
             for(int j=7 ; j<=11 ; j++)
@@ -94,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
             {
                 concerns.add("depression");
                 recommendedGroups.add(6);
+            }
+            else if(count > 0 && count < 3)
+            {
+                concerns.add("partial depression");
+                recommendedGroups.add(8);
             }
 
 
