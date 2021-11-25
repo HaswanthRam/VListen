@@ -150,8 +150,17 @@ public class GroupRecommendation extends Activity{
             final Button nextButton = new Button(this);
             nextButton.setText("Next");
             my_linear_layout.addView(nextButton);
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gotoUserDashboard();
+                }
+            });
         }
 
-
+    private void gotoUserDashboard(){
+        Intent intent = new Intent(GroupRecommendation.this, userDashboard.class);
+        startActivity(intent);
+    }
 
     }

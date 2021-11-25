@@ -1,8 +1,11 @@
 package com.example.vlisten;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +24,13 @@ public class userDashboard extends Activity {
     ArrayList<String> recommendedGroupIds = new ArrayList<>();
     ArrayList<String> joinedGroups = new ArrayList<>();
     LinearLayout my_linear_layout;
-    String age, gender, userName, userId;
+    String age, gender, userName, groupName;
+    // Database reference pointing to root of database
+    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    // Database reference pointing to User node
+    DatabaseReference usersRef = rootRef.child("Users");
+    DatabaseReference groups = usersRef.child("1").child("groups");
+    DatabaseReference groupCollection = rootRef.child("Groups");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,22 +47,17 @@ public class userDashboard extends Activity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 age = snapshot.child("age").getValue().toString();
-                Log.d("age= ", age);
                 gender = snapshot.child("gender").getValue().toString();
-                Log.d("gender= ", gender);
                 userName = snapshot.child("user_Name").getValue().toString();
-                Log.d("userName= ", userName);
 
                 for(DataSnapshot child:snapshot.child("recommendedGroups").getChildren())
                 {
                     recommendedGroupIds.add(child.getValue().toString());
                 }
-                Log.d("groupIds", recommendedGroupIds.toString());
                 for(DataSnapshot child:snapshot.child("groups").getChildren())
                 {
                     joinedGroups.add(child.getValue().toString());
                 }
-                Log.d("joined Groups", joinedGroups.toString());
                 createXML();
             }
 
@@ -88,17 +92,6 @@ public class userDashboard extends Activity {
         rowTextView3.setText(age+"\n");
         my_linear_layout.addView(rowTextView3);
 
-        final TextView rowTextView4 = new TextView(this);
-        rowTextView4.setText("Joined Groups");
-        my_linear_layout.addView(rowTextView4);
-
-        for(int i=0; i<joinedGroups.size();i++)
-        {
-            final TextView rowTextView5 = new TextView(this);
-            rowTextView5.setText(joinedGroups.get(i));
-            my_linear_layout.addView(rowTextView5);
-        }
-
         final TextView rowTextView6 = new TextView(this);
         rowTextView6.setText("Recommended Groups");
         my_linear_layout.addView(rowTextView6);
@@ -106,8 +99,61 @@ public class userDashboard extends Activity {
         for(int j=0; j<recommendedGroupIds.size();j++)
         {
             final TextView rowTextView7 = new TextView(this);
-            rowTextView7.setText(recommendedGroupIds.get(j));
+            String groupId = recommendedGroupIds.get(j);
+            groupCollection.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    groupName = snapshot.child(groupId).child("groupName").getValue().toString();
+                    rowTextView7.setText(groupName);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+            Button joinGroup= new Button(this);
+            if(joinedGroups.contains(recommendedGroupIds.get(j)))
+            {
+                joinGroup.setText("Open");
+                joinGroup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(userDashboard.this, groupFeed.class);
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+            else
+            {
+                joinGroup.setText("Join");
+                String s = recommendedGroupIds.get(j);
+                joinGroup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        groups.push().setValue(s);
+                        groupCollection.child(s).child("groupMembers").push().setValue("User1");
+                        joinGroup.setText("Open");
+                        joinGroup.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(userDashboard.this, groupFeed.class);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                });
+            }
             my_linear_layout.addView(rowTextView7);
+            my_linear_layout.addView(joinGroup);
+
+
         }
     }
 }

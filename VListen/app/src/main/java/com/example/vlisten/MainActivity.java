@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<Switch> s = new ArrayList<>();
     public ArrayList<String> concerns = new ArrayList<>();
     public ArrayList<Integer> recommendedGroups = new ArrayList<>();
-
     Button one;
     int count=0;
     @Override
