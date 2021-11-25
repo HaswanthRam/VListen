@@ -24,7 +24,7 @@ public class GroupRecommendation extends Activity{
         ArrayList<String> recommendedGroupIds = new ArrayList<>();
         ArrayList<String> recommendedGroupDescriptions = new ArrayList<>();
     ArrayList<String> recommendedGroupNames = new ArrayList<>();
-
+     String userId;
 
     // Database reference pointing to root of database
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -56,6 +56,7 @@ public class GroupRecommendation extends Activity{
                     //iterating over the recommended group IDs through the Users node.
                     for (DataSnapshot child : snapshot.getChildren()) {
                         recommendedGroupIds.add(child.getValue().toString());
+                        //userId = child.child("user_id").getValue().toString();
                     }
 
                     //Groups IDs fetched. Fetching Group Names and Description with Group IDs
@@ -72,6 +73,7 @@ public class GroupRecommendation extends Activity{
                                 {
                                    recommendedGroupDescriptions.add(child.child("description").getValue().toString());
                                     recommendedGroupNames.add(child.child("groupName").getValue().toString());
+
                                     flag++; //variable to keep the length of recommendedGroupIDs in check
 
                                     if(flag == recommendedGroupIds.size())
@@ -136,8 +138,10 @@ public class GroupRecommendation extends Activity{
                         {
                             //groups.push().setValue(s);
                             groups.push().setValue(s);
-                            groupCollection.child(s).child("groupMembers").push().setValue("User1");
+                            //Log.d("userId",userId);
+                            groupCollection.child(s).child("groupMembers").push().setValue("1");
                             JoinButton.setText("Joined");
+
                         }
                        else
                         {
