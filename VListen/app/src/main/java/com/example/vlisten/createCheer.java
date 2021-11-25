@@ -40,6 +40,13 @@ public class createCheer extends Activity {
         TextView postText = findViewById(R.id.postText);
         Button send = findViewById(R.id.sendButton);
         Button createCheerPost = findViewById(R.id.postCheerButton);
+        Button goToCheerBoard = findViewById(R.id.goToCheerBoard);
+        goToCheerBoard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoCheerBoard();
+            }
+        });
 
         createCheerPost.setOnClickListener(new View.OnClickListener() {
             @Override

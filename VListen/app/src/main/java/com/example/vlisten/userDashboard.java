@@ -152,8 +152,16 @@ public class userDashboard extends Activity {
             }
             my_linear_layout.addView(rowTextView7);
             my_linear_layout.addView(joinGroup);
-
-
         }
+        Button createCheer = new Button(this);
+        createCheer.setText("Create Cheer");
+        my_linear_layout.addView(createCheer);
+        createCheer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(userDashboard.this, createCheer.class);
+                startActivity(intent);
+            }
+        });
     }
 }
