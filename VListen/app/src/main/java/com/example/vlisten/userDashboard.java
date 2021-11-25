@@ -24,7 +24,7 @@ public class userDashboard extends Activity {
     ArrayList<String> recommendedGroupIds = new ArrayList<>();
     ArrayList<String> joinedGroups = new ArrayList<>();
     LinearLayout my_linear_layout;
-    String age, gender, userName, groupName;
+    String age, gender, userName, groupName,activeGroupFinal;
     // Database reference pointing to root of database
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // Database reference pointing to User node
@@ -120,10 +120,14 @@ public class userDashboard extends Activity {
             if(joinedGroups.contains(recommendedGroupIds.get(j)))
             {
                 joinGroup.setText("Open");
+                String activeGroup = recommendedGroupIds.get(j);
                 joinGroup.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(userDashboard.this, groupFeed.class);
+                        activeGroupFinal = activeGroup;
+                        intent.putExtra("g_id", activeGroupFinal);
+                        Log.d("groupName",activeGroupFinal);
                         startActivity(intent);
                     }
                 });

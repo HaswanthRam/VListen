@@ -27,13 +27,6 @@ public class Posts {
         this.likes = likes;
     }
 
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
 
 
 
@@ -69,7 +62,12 @@ public class Posts {
 
     ArrayList<String> userIds = new ArrayList<>();
     int likes;
-    int groupId;
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    String groupId;
     String postId;
     String text;
     String user;

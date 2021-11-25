@@ -3,6 +3,7 @@ package com.example.vlisten;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -30,10 +31,15 @@ public class groupFeed extends Activity {
     DatabaseReference PostsRef = rootRef.child("Posts");
     ArrayList<Posts> Posts = new ArrayList<>();
 
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.iterative_linearlayout);
+        Intent intent = getIntent();
+        String activeGroup = intent.getStringExtra("g_id");
         PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -42,14 +48,18 @@ public class groupFeed extends Activity {
                 //iterating over the recommended group IDs through the Users node.
                 for (DataSnapshot child : snapshot.getChildren()) {
 
-                    Posts p = new Posts();
-                    p.setText(child.child("text").getValue().toString());
-                    p.setUser(child.child("user").getValue().toString());
-                    p.setPostId(child.child("postId").getValue().toString());
-                    p.setLikes(Integer.valueOf(child.child("likes").getValue().toString()));
-                    Posts.add(p);
+                    if (child.child("groupId").getValue().toString().equals(activeGroup)) {
+                        Log.d("GroupName2",child.child("groupId").getValue().toString());
+                        Posts p = new Posts();
+                        p.setText(child.child("text").getValue().toString());
+                        p.setUser(child.child("user").getValue().toString());
+                        p.setPostId(child.child("postId").getValue().toString());
+                        p.setLikes(Integer.valueOf(child.child("likes").getValue().toString()));
+                        Posts.add(p);
 
+                    }
                 }
+
 
                 createXML();
             }
@@ -72,12 +82,13 @@ public class groupFeed extends Activity {
         rowTextViewTitle.setGravity(1);
         rowTextViewTitle.setTextSize(28);
         my_linear_layout.addView(rowTextViewTitle);
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i <Posts.size() ; i++) {
             // create a new textview
             final TextView rowTextView = new TextView(this);
             rowTextView.setText(Posts.get(i).getText());
             rowTextView.setId(i);
             my_linear_layout.addView(rowTextView);
+
             //creating another text view
             final TextView rowTextView2 = new TextView(this);
             rowTextView2.setText(Posts.get(i).getUser());
