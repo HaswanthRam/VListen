@@ -24,14 +24,20 @@ public class createCheer extends Activity {
     // Database reference pointing to User node
     DatabaseReference PostsRef = rootRef.child("Posts");
     DatabaseReference CheersRef = rootRef.child("Cheers");
+    String activeUserId;
     ArrayList<POJO.Posts> Posts = new ArrayList<>();
     ArrayList<POJO.cheerPosts> cheerPosts = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dummy_create_cheer);
         Random r = new Random();
+        Intent intent = getIntent();
+        String activeGroup = intent.getStringExtra("g_id");
+        activeUserId = intent.getStringExtra("user_id");
+        if(activeUserId != null)
+        {
+            setContentView(R.layout.dummy_create_cheer);
 
         String generatedString = r.ints(97, 122 + 1)
                 .limit(15)
@@ -48,6 +54,7 @@ public class createCheer extends Activity {
             }
         });
 
+
         createCheerPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,16 +63,21 @@ public class createCheer extends Activity {
                 cheer.setCheers(0);
                 cheer.setCheerPostId(generatedString);
                 cheer.setUserName("User 1");
-                cheer.setUserId("1");
+                cheer.setUserId(activeUserId);
                 CheersRef.child(generatedString).setValue(cheer);
                 gotoCheerBoard();
             }
         });
-
+        }
+        else
+        {
+            setContentView(R.layout.dummy_sign_in);
+        }
 
     }
     private void gotoCheerBoard(){
         Intent intent = new Intent(createCheer.this, cheerBoard.class);
+        intent.putExtra("user_id", activeUserId);
         startActivity(intent);
     }
 }

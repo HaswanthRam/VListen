@@ -1,6 +1,7 @@
 package com.example.vlisten;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,10 +29,16 @@ public class cheerBoard extends Activity {
     // Database reference pointing to User node
     DatabaseReference CheerRef = rootRef.child("Cheers");
     ArrayList<cheerPosts> cheers = new ArrayList<>();
+    String activeUserId;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.iterative_linearlayout);
+        Intent intent = getIntent();
+        String activeGroup = intent.getStringExtra("g_id");
+        activeUserId = intent.getStringExtra("user_id");
+        if(activeUserId != null)
+        {
+            setContentView(R.layout.iterative_linearlayout);
 
         CheerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -58,6 +65,11 @@ public class cheerBoard extends Activity {
 
             }
         });
+        }
+        else
+        {
+            setContentView(R.layout.dummy_sign_in);
+        }
 
 
     }

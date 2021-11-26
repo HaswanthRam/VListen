@@ -63,11 +63,16 @@ public class Posts {
     ArrayList<String> userIds = new ArrayList<>();
     int likes;
 
-    public void setGroupId(String groupId) {
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
 
-    String groupId;
+    int groupId;
     String postId;
     String text;
     String user;

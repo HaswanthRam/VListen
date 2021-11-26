@@ -26,6 +26,7 @@ import POJO.Posts;
 public class groupFeed extends Activity {
     LinearLayout my_linear_layout;
     int N;
+    String activeUserId, activeGroup;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // Database reference pointing to User node
     DatabaseReference PostsRef = rootRef.child("Posts");
@@ -37,9 +38,12 @@ public class groupFeed extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.iterative_linearlayout);
         Intent intent = getIntent();
-        String activeGroup = intent.getStringExtra("g_id");
+        activeGroup = intent.getStringExtra("g_id");
+        activeUserId = intent.getStringExtra("user_id");
+        if(activeUserId != null)
+        {
+            setContentView(R.layout.iterative_linearlayout);
         PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -49,7 +53,6 @@ public class groupFeed extends Activity {
                 for (DataSnapshot child : snapshot.getChildren()) {
 
                     if (child.child("groupId").getValue().toString().equals(activeGroup)) {
-                        Log.d("GroupName2",child.child("groupId").getValue().toString());
                         Posts p = new Posts();
                         p.setText(child.child("text").getValue().toString());
                         p.setUser(child.child("user").getValue().toString());
@@ -69,7 +72,11 @@ public class groupFeed extends Activity {
 
             }
         });
-
+        }
+        else
+        {
+            setContentView(R.layout.dummy_sign_in);
+        }
 
     }
     //method to create the iterative XML
@@ -133,6 +140,8 @@ public class groupFeed extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(groupFeed.this, createPost.class);
+                intent.putExtra("g_id", activeGroup);
+                intent.putExtra("user_id", activeUserId);
                 startActivity(intent);
             }
         });

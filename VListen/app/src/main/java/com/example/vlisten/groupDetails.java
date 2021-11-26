@@ -30,7 +30,7 @@ public class groupDetails extends Activity {
     String groupName;
     String groupId;
     String groupDescription;
-    String Groupmem;
+    String groupMember;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference userRef = rootRef.child("Users");
     // Database reference pointing to User node
@@ -58,7 +58,7 @@ public class groupDetails extends Activity {
                     //iterating over the group members through the Users node.
                     for (DataSnapshot child : snapshot.getChildren()) {
                         groupMembers.add(child.getValue().toString());
-                        Groupmem = child.getValue().toString();
+                        groupMember = child.getValue().toString();
 
                     }
 
