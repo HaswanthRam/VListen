@@ -64,11 +64,12 @@ public class Posts {
     int likes;
 
 
-    public int getGroupId() {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(String groupId) {
+
         this.groupId = groupId;
     }
 

@@ -19,13 +19,19 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<Integer> recommendedGroups = new ArrayList<>();
     public String activeUserId = "1";
     Button one;
-    int count = 0;
 
+    int count=0;
+    Intent intent;
+    String userId, name, age, gender;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (activeUserId != null) {
-            setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+        intent=getIntent();
+        userId = intent.getStringExtra("userId");
+        name = intent.getStringExtra("name");
+        age = intent.getStringExtra("age");
+        gender = intent.getStringExtra("gender");
 
         //take values from checkboxes
 
@@ -100,10 +106,15 @@ public class MainActivity extends AppCompatActivity {
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             // Database reference pointing to demo node
             DatabaseReference usersRef = rootRef.child("Users");
-            usersRef.child("1").child("concerns").setValue(concerns);
+            //usersRef.child("1").child("concerns").setValue(concerns);
+            usersRef.child(userId).child("concerns").setValue(concerns);
+            usersRef.child(userId).child("name").setValue(name);
+            usersRef.child(userId).child("user_id").setValue(userId);
+            usersRef.child(userId).child("age").setValue(age);
+            usersRef.child(userId).child("gender").setValue(gender);
 
             // Database reference pointing to demo node
-            usersRef.child("1").child("recommendedGroups").setValue(recommendedGroups);
+            usersRef.child(userId).child("recommendedGroups").setValue(recommendedGroups);
 
             gotoGroupRecommendation();
         });
@@ -117,7 +128,12 @@ public class MainActivity extends AppCompatActivity {
 }
     private void gotoGroupRecommendation(){
         Intent intent = new Intent(MainActivity.this, GroupRecommendation.class);
-        intent.putExtra("user_id", activeUserId);
+
+        intent.putExtra("name", name);
+        intent.putExtra("userId", userId);
+        intent.putExtra("age", age);
+        intent.putExtra("gender", gender);
+
         startActivity(intent);
     }
 }

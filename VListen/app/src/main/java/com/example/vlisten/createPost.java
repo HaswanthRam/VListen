@@ -39,17 +39,20 @@ public class createPost extends Activity {
     String activeUserId, activeGroup;
     ArrayList<Posts> Posts = new ArrayList<>();
     ArrayList<cheerPosts> cheerPosts = new ArrayList<>();
-
+    Intent intent;
+    String userId, name, age, gender, g_id;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Random r = new Random();
-        Intent intent = getIntent();
-        activeGroup = intent.getStringExtra("g_id");
-        activeUserId = intent.getStringExtra("user_id");
-        if(activeUserId != null)
-        {
-            setContentView(R.layout.dummy_create_post);
+
+        intent=getIntent();
+        userId = intent.getStringExtra("userId");
+        g_id = intent.getStringExtra("g_id");
+        name = intent.getStringExtra("name");
+        age = intent.getStringExtra("age");
+        gender = intent.getStringExtra("gender");
+
         String generatedString = r.ints(97, 122 + 1)
                 .limit(15)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -66,9 +69,12 @@ public class createPost extends Activity {
 
                     Posts newPost = new Posts();
                     newPost.setText(postText.getText().toString());
-                    newPost.setUser(activeUserId);
+
+                    newPost.setUser(userId);
+
                     newPost.setLikes(0);
-                    newPost.setUserName("User One");
+                    newPost.setUserName(name);
+                    newPost.setGroupId(g_id);
                     newPost.setPostId(generatedString);
                     newPost.setGroupId(Integer.parseInt(activeGroup));
                     PostsRef.child(generatedString).setValue(newPost);
@@ -91,8 +97,13 @@ public class createPost extends Activity {
     }
     private void gotoGroupFeed(){
         Intent intent = new Intent(createPost.this, groupFeed.class);
-        intent.putExtra("user_id", activeUserId);
-        intent.putExtra("g_id", activeGroup);
+
+        intent.putExtra("name", name);
+        intent.putExtra("userId", userId);
+        intent.putExtra("age", age);
+        intent.putExtra("gender", gender);
+        intent.putExtra("g_id", g_id);
+
         startActivity(intent);
     }
 }

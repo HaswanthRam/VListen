@@ -24,33 +24,40 @@ public class GroupRecommendation extends Activity{
         ArrayList<String> recommendedGroupIds = new ArrayList<>();
         ArrayList<String> recommendedGroupDescriptions = new ArrayList<>();
     ArrayList<String> recommendedGroupNames = new ArrayList<>();
-     String activeUserId;
 
+
+    Intent intent;
+    String userId, name, age, gender;
     // Database reference pointing to root of database
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // Database reference pointing to User node
     DatabaseReference usersRef = rootRef.child("Users");
-    DatabaseReference groups;
 
-    DatabaseReference groupCollection = rootRef.child("Groups");
+
 
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            Intent intent = getIntent();
-            activeUserId = intent.getStringExtra("user_id");
-            if(activeUserId != null)
-            {
-                setContentView(R.layout.iterative_linearlayout);
 
-            groups = usersRef.child(activeUserId).child("groups");
+            setContentView(R.layout.iterative_linearlayout);
+            intent=getIntent();
+            userId = intent.getStringExtra("userId");
+            name = intent.getStringExtra("name");
+            age = intent.getStringExtra("age");
+            gender = intent.getStringExtra("gender");
+=======
+            
             // Database reference pointing to root of database
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             // Database reference pointing to User node
             DatabaseReference usersRef = rootRef.child("Users");
+            DatabaseReference groups = usersRef.child(userId).child("groups");
+            DatabaseReference groupCollection = rootRef.child("Groups");
             // Database reference for recommended groups
-            DatabaseReference groupId = usersRef.child(activeUserId).child("recommendedGroups");
+
+            DatabaseReference groupId = usersRef.child(userId).child("recommendedGroups");
+
 
             //method to fetch the recommended Group IDs from Users node
             groupId.addValueEventListener(new ValueEventListener() {
@@ -123,7 +130,10 @@ public class GroupRecommendation extends Activity{
             rowTextViewTitle.setGravity(1);
             rowTextViewTitle.setTextSize(28);
             my_linear_layout.addView(rowTextViewTitle);
-
+            DatabaseReference groups = usersRef.child(userId).child("groups");
+            DatabaseReference groupCollection = rootRef.child("Groups");
+            // Database reference for recommended groups
+            DatabaseReference groupId = usersRef.child(userId).child("recommendedGroups");
             for (int i = 0; i < N; i++) {
                 // create a new textview
                 final TextView rowTextView = new TextView(this);
@@ -146,7 +156,9 @@ public class GroupRecommendation extends Activity{
                         if(JoinButton.getText()=="Join")
                         {
                             groups.push().setValue(s);
-                            groupCollection.child(s).child("groupMembers").push().setValue(activeUserId);
+
+                            groupCollection.child(s).child("groupMembers").push().setValue(name);
+
                             JoinButton.setText("Joined");
 
                         }
@@ -171,7 +183,12 @@ public class GroupRecommendation extends Activity{
 
     private void gotoUserDashboard(){
         Intent intent = new Intent(GroupRecommendation.this, userDashboard.class);
-        intent.putExtra("user_id", activeUserId);
+
+        intent.putExtra("name", name);
+        intent.putExtra("userId", userId);
+        intent.putExtra("age", age);
+        intent.putExtra("gender", gender);
+
         startActivity(intent);
     }
 

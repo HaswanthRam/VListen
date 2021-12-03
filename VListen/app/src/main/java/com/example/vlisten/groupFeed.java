@@ -31,7 +31,8 @@ public class groupFeed extends Activity {
     // Database reference pointing to User node
     DatabaseReference PostsRef = rootRef.child("Posts");
     ArrayList<Posts> Posts = new ArrayList<>();
-
+    String name, age, gender, userId,activeGroup;
+    Intent intent;
 
 
     @Override
@@ -40,10 +41,12 @@ public class groupFeed extends Activity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         activeGroup = intent.getStringExtra("g_id");
-        activeUserId = intent.getStringExtra("user_id");
-        if(activeUserId != null)
-        {
-            setContentView(R.layout.iterative_linearlayout);
+
+        userId = intent.getStringExtra("userId");
+        name = intent.getStringExtra("name");
+        age = intent.getStringExtra("age");
+        gender = intent.getStringExtra("gender");
+
         PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -55,8 +58,9 @@ public class groupFeed extends Activity {
                     if (child.child("groupId").getValue().toString().equals(activeGroup)) {
                         Posts p = new Posts();
                         p.setText(child.child("text").getValue().toString());
-                        p.setUser(child.child("user").getValue().toString());
+                        p.setUserName(child.child("userName").getValue().toString());
                         p.setPostId(child.child("postId").getValue().toString());
+
                         p.setLikes(Integer.valueOf(child.child("likes").getValue().toString()));
                         Posts.add(p);
 
@@ -98,7 +102,7 @@ public class groupFeed extends Activity {
 
             //creating another text view
             final TextView rowTextView2 = new TextView(this);
-            rowTextView2.setText(Posts.get(i).getUser());
+            rowTextView2.setText(Posts.get(i).getUserName());
             rowTextView2.setId(i);
             my_linear_layout.addView(rowTextView2);
             //creating a like button
@@ -134,17 +138,37 @@ public class groupFeed extends Activity {
 
         final Button createPost = new Button(this);
         createPost.setText("Create Post");
-//        createPost.setId();
 
         createPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(groupFeed.this, createPost.class);
+
+                intent.putExtra("name", name);
+                intent.putExtra("userId", userId);
+                intent.putExtra("age", age);
+                intent.putExtra("gender", gender);
                 intent.putExtra("g_id", activeGroup);
-                intent.putExtra("user_id", activeUserId);
+
                 startActivity(intent);
             }
         });
         my_linear_layout.addView(createPost);
+        final Button groupDetails = new Button(this);
+        groupDetails.setText("Group Details");
+
+        groupDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(groupFeed.this, groupDetails.class);
+                intent1.putExtra("name", name);
+                intent1.putExtra("userId", userId);
+                intent1.putExtra("age", age);
+                intent1.putExtra("gender", gender);
+                intent1.putExtra("g_id", activeGroup);
+                startActivity(intent1);
+            }
+        });
+        my_linear_layout.addView(groupDetails);
 
     }}
