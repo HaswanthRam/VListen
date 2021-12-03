@@ -24,11 +24,9 @@ public class userDashboard extends Activity {
     ArrayList<String> recommendedGroupIds = new ArrayList<>();
     ArrayList<String> joinedGroups = new ArrayList<>();
     LinearLayout my_linear_layout;
-
     String groupName,activeGroupFinal;
     Intent intent;
     String userId, name, age, gender;
-
     // Database reference pointing to root of database
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // Database reference pointing to User node
@@ -38,22 +36,18 @@ public class userDashboard extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.iterative_linearlayout);
         intent=getIntent();
         userId = intent.getStringExtra("userId");
         name = intent.getStringExtra("name");
         age = intent.getStringExtra("age");
         gender = intent.getStringExtra("gender");
-
         // Database reference pointing to root of database
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference usersRef = rootRef.child("Users").child(userId);
         DatabaseReference groups = usersRef.child(userId).child("groups");
         DatabaseReference groupCollection = rootRef.child("Groups");
         // Database reference pointing to User node
-
-
 
 
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -80,11 +74,6 @@ public class userDashboard extends Activity {
 
             }
         });
-        }
-        else
-        {
-            setContentView(R.layout.dummy_sign_in);
-        }
 
 
     }
@@ -152,7 +141,6 @@ public class userDashboard extends Activity {
                         intent.putExtra("age", age);
                         intent.putExtra("gender", gender);
                         intent.putExtra("g_id", activeGroupFinal);
-
                         startActivity(intent);
                     }
                 });
@@ -173,7 +161,6 @@ public class userDashboard extends Activity {
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(userDashboard.this, groupFeed.class);
-                                intent.putExtra("user_id", activeUserId);
                                 startActivity(intent);
                             }
                         });
@@ -190,12 +177,10 @@ public class userDashboard extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(userDashboard.this, createCheer.class);
-
                 intent.putExtra("name", name);
                 intent.putExtra("userId", userId);
                 intent.putExtra("age", age);
                 intent.putExtra("gender", gender);
-
                 startActivity(intent);
             }
         });

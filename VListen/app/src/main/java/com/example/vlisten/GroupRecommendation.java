@@ -25,7 +25,6 @@ public class GroupRecommendation extends Activity{
         ArrayList<String> recommendedGroupDescriptions = new ArrayList<>();
     ArrayList<String> recommendedGroupNames = new ArrayList<>();
 
-
     Intent intent;
     String userId, name, age, gender;
     // Database reference pointing to root of database
@@ -35,19 +34,15 @@ public class GroupRecommendation extends Activity{
 
 
 
-
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
             setContentView(R.layout.iterative_linearlayout);
             intent=getIntent();
             userId = intent.getStringExtra("userId");
             name = intent.getStringExtra("name");
             age = intent.getStringExtra("age");
             gender = intent.getStringExtra("gender");
-=======
-            
             // Database reference pointing to root of database
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             // Database reference pointing to User node
@@ -55,9 +50,7 @@ public class GroupRecommendation extends Activity{
             DatabaseReference groups = usersRef.child(userId).child("groups");
             DatabaseReference groupCollection = rootRef.child("Groups");
             // Database reference for recommended groups
-
             DatabaseReference groupId = usersRef.child(userId).child("recommendedGroups");
-
 
             //method to fetch the recommended Group IDs from Users node
             groupId.addValueEventListener(new ValueEventListener() {
@@ -68,6 +61,7 @@ public class GroupRecommendation extends Activity{
                     //iterating over the recommended group IDs through the Users node.
                     for (DataSnapshot child : snapshot.getChildren()) {
                         recommendedGroupIds.add(child.getValue().toString());
+                        //userId = child.child("user_id").getValue().toString();
                     }
 
                     //Groups IDs fetched. Fetching Group Names and Description with Group IDs
@@ -114,11 +108,6 @@ public class GroupRecommendation extends Activity{
 
                 }
             });
-            }
-            else
-            {
-                setContentView(R.layout.dummy_sign_in);
-            }
         }
         //method to create the iterative XML
         public void createXML()
@@ -155,10 +144,10 @@ public class GroupRecommendation extends Activity{
                     public void onClick(View view) {
                         if(JoinButton.getText()=="Join")
                         {
+                            //groups.push().setValue(s);
                             groups.push().setValue(s);
-
+                            //Log.d("userId",userId);
                             groupCollection.child(s).child("groupMembers").push().setValue(name);
-
                             JoinButton.setText("Joined");
 
                         }
@@ -183,12 +172,10 @@ public class GroupRecommendation extends Activity{
 
     private void gotoUserDashboard(){
         Intent intent = new Intent(GroupRecommendation.this, userDashboard.class);
-
         intent.putExtra("name", name);
         intent.putExtra("userId", userId);
         intent.putExtra("age", age);
         intent.putExtra("gender", gender);
-
         startActivity(intent);
     }
 

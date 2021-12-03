@@ -69,11 +69,10 @@ public class Posts {
     }
 
     public void setGroupId(String groupId) {
-
         this.groupId = groupId;
     }
 
-    int groupId;
+    String groupId;
     String postId;
     String text;
     String user;
