@@ -26,13 +26,18 @@ public class createCheer extends Activity {
     DatabaseReference CheersRef = rootRef.child("Cheers");
     ArrayList<POJO.Posts> Posts = new ArrayList<>();
     ArrayList<POJO.cheerPosts> cheerPosts = new ArrayList<>();
-
+    Intent intent;
+    String userId, name, age, gender;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dummy_create_cheer);
         Random r = new Random();
-
+        intent=getIntent();
+        userId = intent.getStringExtra("userId");
+        name = intent.getStringExtra("name");
+        age = intent.getStringExtra("age");
+        gender = intent.getStringExtra("gender");
         String generatedString = r.ints(97, 122 + 1)
                 .limit(15)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -55,8 +60,8 @@ public class createCheer extends Activity {
                 cheer.setText(postText.getText().toString());
                 cheer.setCheers(0);
                 cheer.setCheerPostId(generatedString);
-                cheer.setUserName("User 1");
-                cheer.setUserId("1");
+                cheer.setUserName(name);
+                cheer.setUserId(userId);
                 CheersRef.child(generatedString).setValue(cheer);
                 gotoCheerBoard();
             }

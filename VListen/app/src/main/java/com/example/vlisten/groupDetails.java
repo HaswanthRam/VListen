@@ -28,26 +28,27 @@ public class groupDetails extends Activity {
     LinearLayout my_linear_layout;
     int N;
     String groupName;
-    String groupId;
+    String g_id;
     String groupDescription;
     String Groupmem;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference userRef = rootRef.child("Users");
     // Database reference pointing to User node
-    DatabaseReference groupRef = rootRef.child("Groups").child("2");
 
+    Intent intent;
 
     ArrayList<String> groupMembers = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.iterative_linearlayout);
-
+        Intent intent = getIntent();
+        g_id = intent.getStringExtra("g_id");
+        DatabaseReference groupRef = rootRef.child("Groups").child(g_id);
         groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
             groupName = snapshot.child("groupName").getValue().toString();
-            groupId = snapshot.child("groupId").getValue().toString();
             groupDescription = snapshot.child("description").getValue().toString();
 
 
@@ -121,6 +122,7 @@ public class groupDetails extends Activity {
             leaveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    DatabaseReference groupRef = rootRef.child("Groups").child(g_id);
                     DatabaseReference  members= groupRef.child("groupMembers");
                     members.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

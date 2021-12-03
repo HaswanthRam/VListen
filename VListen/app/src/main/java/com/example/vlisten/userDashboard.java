@@ -24,23 +24,31 @@ public class userDashboard extends Activity {
     ArrayList<String> recommendedGroupIds = new ArrayList<>();
     ArrayList<String> joinedGroups = new ArrayList<>();
     LinearLayout my_linear_layout;
-    String age, gender, userName, groupName,activeGroupFinal;
+    String groupName,activeGroupFinal;
+    Intent intent;
+    String userId, name, age, gender;
     // Database reference pointing to root of database
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // Database reference pointing to User node
     DatabaseReference usersRef = rootRef.child("Users");
-    DatabaseReference groups = usersRef.child("1").child("groups");
-    DatabaseReference groupCollection = rootRef.child("Groups");
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.iterative_linearlayout);
-
+        intent=getIntent();
+        userId = intent.getStringExtra("userId");
+        name = intent.getStringExtra("name");
+        age = intent.getStringExtra("age");
+        gender = intent.getStringExtra("gender");
         // Database reference pointing to root of database
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference usersRef = rootRef.child("Users").child(userId);
+        DatabaseReference groups = usersRef.child(userId).child("groups");
+        DatabaseReference groupCollection = rootRef.child("Groups");
         // Database reference pointing to User node
-        DatabaseReference usersRef = rootRef.child("Users").child("1");
+
 
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -48,7 +56,7 @@ public class userDashboard extends Activity {
 
                 age = snapshot.child("age").getValue().toString();
                 gender = snapshot.child("gender").getValue().toString();
-                userName = snapshot.child("user_Name").getValue().toString();
+                name = snapshot.child("name").getValue().toString();
 
                 for(DataSnapshot child:snapshot.child("recommendedGroups").getChildren())
                 {
@@ -81,7 +89,7 @@ public class userDashboard extends Activity {
         my_linear_layout.addView(rowTextViewTitle);
 
         final TextView rowTextView = new TextView(this);
-        rowTextView.setText(userName+"\n");
+        rowTextView.setText(name+"\n");
         my_linear_layout.addView(rowTextView);
 
         final TextView rowTextView2 = new TextView(this);
@@ -100,6 +108,8 @@ public class userDashboard extends Activity {
         {
             final TextView rowTextView7 = new TextView(this);
             String groupId = recommendedGroupIds.get(j);
+            DatabaseReference groups = usersRef.child(userId).child("groups");
+            DatabaseReference groupCollection = rootRef.child("Groups");
             groupCollection.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -126,8 +136,11 @@ public class userDashboard extends Activity {
                     public void onClick(View view) {
                         Intent intent = new Intent(userDashboard.this, groupFeed.class);
                         activeGroupFinal = activeGroup;
+                        intent.putExtra("name", name);
+                        intent.putExtra("userId", userId);
+                        intent.putExtra("age", age);
+                        intent.putExtra("gender", gender);
                         intent.putExtra("g_id", activeGroupFinal);
-                        Log.d("groupName",activeGroupFinal);
                         startActivity(intent);
                     }
                 });
@@ -142,7 +155,7 @@ public class userDashboard extends Activity {
                     @Override
                     public void onClick(View view) {
                         groups.push().setValue(s);
-                        groupCollection.child(s).child("groupMembers").push().setValue("User1");
+                        groupCollection.child(s).child("groupMembers").push().setValue(name);
                         joinGroup.setText("Open");
                         joinGroup.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -164,6 +177,10 @@ public class userDashboard extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(userDashboard.this, createCheer.class);
+                intent.putExtra("name", name);
+                intent.putExtra("userId", userId);
+                intent.putExtra("age", age);
+                intent.putExtra("gender", gender);
                 startActivity(intent);
             }
         });
