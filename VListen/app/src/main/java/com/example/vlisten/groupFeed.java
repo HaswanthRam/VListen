@@ -26,6 +26,7 @@ import POJO.Posts;
 public class groupFeed extends Activity {
     LinearLayout my_linear_layout;
     int N;
+    String activeUserId, activeGroup;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     // Database reference pointing to User node
     DatabaseReference PostsRef = rootRef.child("Posts");
@@ -38,13 +39,14 @@ public class groupFeed extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.iterative_linearlayout);
         Intent intent = getIntent();
         activeGroup = intent.getStringExtra("g_id");
+
         userId = intent.getStringExtra("userId");
         name = intent.getStringExtra("name");
         age = intent.getStringExtra("age");
         gender = intent.getStringExtra("gender");
+
         PostsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -74,7 +76,11 @@ public class groupFeed extends Activity {
 
             }
         });
-
+        }
+        else
+        {
+            setContentView(R.layout.dummy_sign_in);
+        }
 
     }
     //method to create the iterative XML
@@ -137,11 +143,13 @@ public class groupFeed extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(groupFeed.this, createPost.class);
+
                 intent.putExtra("name", name);
                 intent.putExtra("userId", userId);
                 intent.putExtra("age", age);
                 intent.putExtra("gender", gender);
                 intent.putExtra("g_id", activeGroup);
+
                 startActivity(intent);
             }
         });

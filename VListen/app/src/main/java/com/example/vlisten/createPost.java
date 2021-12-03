@@ -36,6 +36,7 @@ public class createPost extends Activity {
     // Database reference pointing to User node
     DatabaseReference PostsRef = rootRef.child("Posts");
     DatabaseReference CheersRef = rootRef.child("Cheers");
+    String activeUserId, activeGroup;
     ArrayList<Posts> Posts = new ArrayList<>();
     ArrayList<cheerPosts> cheerPosts = new ArrayList<>();
     Intent intent;
@@ -43,14 +44,15 @@ public class createPost extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dummy_create_post);
         Random r = new Random();
+
         intent=getIntent();
         userId = intent.getStringExtra("userId");
         g_id = intent.getStringExtra("g_id");
         name = intent.getStringExtra("name");
         age = intent.getStringExtra("age");
         gender = intent.getStringExtra("gender");
+
         String generatedString = r.ints(97, 122 + 1)
                 .limit(15)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -67,11 +69,14 @@ public class createPost extends Activity {
 
                     Posts newPost = new Posts();
                     newPost.setText(postText.getText().toString());
+
                     newPost.setUser(userId);
+
                     newPost.setLikes(0);
                     newPost.setUserName(name);
                     newPost.setGroupId(g_id);
                     newPost.setPostId(generatedString);
+                    newPost.setGroupId(Integer.parseInt(activeGroup));
                     PostsRef.child(generatedString).setValue(newPost);
                     gotoGroupFeed();
                 }
@@ -83,15 +88,22 @@ public class createPost extends Activity {
             }
 
         });
+        }
+        else
+        {
+            setContentView(R.layout.dummy_sign_in);
+        }
 
     }
     private void gotoGroupFeed(){
         Intent intent = new Intent(createPost.this, groupFeed.class);
+
         intent.putExtra("name", name);
         intent.putExtra("userId", userId);
         intent.putExtra("age", age);
         intent.putExtra("gender", gender);
         intent.putExtra("g_id", g_id);
+
         startActivity(intent);
     }
 }
