@@ -77,6 +77,7 @@ public class Login extends AppCompatActivity {
 
                         userId=task.getResult().getUser().getUid();
                         goToUserDashboard();
+                        //changes for chat feature
                     } else {
                         Toast.makeText(Login.this, "Something Went Wrong! " + task.getException(), Toast.LENGTH_SHORT).show();
                     }
